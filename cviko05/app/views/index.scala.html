@@ -1,0 +1,16 @@
+@(message: String)
+
+@main("Welcome to Play") {
+
+    <h2>Customers table</h2>
+
+    <table>
+    @for(c <- model.CustomersDAO.getAll) {
+        <tr><td>@c.name</td><td>@c.age</td></tr>
+    }
+    </table>
+
+    <hr />
+
+    <a href="/addCustomer">ADD</a>
+}

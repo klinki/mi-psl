@@ -1,0 +1,12 @@
+@(customerForm: Form[model.Customer])(message: String)
+
+
+@main("Form!") {
+    <h2>Add customer</h2>
+
+    <form action="/customers" method="post">
+        @helper.inputText(customerForm("name"))
+        <input type="submit" value="Add customer" />
+    </form>
+
+}
