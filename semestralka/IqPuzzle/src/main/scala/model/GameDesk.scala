@@ -6,7 +6,7 @@ package model
 class GameDesk
 {
   val desk: Array[Array[Int]] = Array.tabulate(11, 5){(x, y) => 0}
-
+  val pieces: Array[Piece] = new Array[Piece](12)
 
   def canInsertPiece(piece: Piece, x: Int, y: Int) = {
 
@@ -21,11 +21,15 @@ class GameDesk
       piece.array.foreach(row => {
         var colNum = 0
         row.foreach(value => {
-          desk(pointX + rowNum)( pointY + colNum) = value
+          desk(pointX + rowNum)(pointY + colNum) = value
           colNum += 1
         })
         rowNum += 1
       })
     }
+  }
+
+  def removePiece(piece: Piece, pointX: Int, pointY: Int) = {
+
   }
 }

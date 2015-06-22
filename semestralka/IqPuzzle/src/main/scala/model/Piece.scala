@@ -3,19 +3,13 @@ package model
 /**
  * Created by David on 14. 6. 2015.
  */
-class Piece(var array: Array[Array[Int]])
+abstract class Piece(var array: Array[Array[Int]])
 {
   def width = array.length
   def height = array(0).length
 
-  def rotate = {
-    // first row => last column
-    var rotatedArray = array.transpose
-  }
-
-  def reverse = {
-
-  }
+  def rotate: Piece
+  def reverse: Piece
 }
 
 object Piece
