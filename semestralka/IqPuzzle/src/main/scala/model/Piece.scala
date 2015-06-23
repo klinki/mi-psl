@@ -1,9 +1,11 @@
 package model
 
+import model.Piece.Orientation
+
 /**
  * Created by David on 14. 6. 2015.
  */
-abstract class Piece(var array: Array[Array[Int]])
+abstract class Piece(val array: Array[Array[Int]])
 {
   def width = array.length
   def height = array(0).length

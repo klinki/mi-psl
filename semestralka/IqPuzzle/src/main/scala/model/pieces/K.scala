@@ -5,7 +5,5 @@ import model.ImmutablePiece
 /**
  * Created by David on 22. 6. 2015.
  */
-object K extends ImmutablePiece(((1, 1), (1, 1)))
-{
-
-}
+case object K extends ImmutablePiece(Array(Array(1, 1),
+                                           Array(1, 1)))

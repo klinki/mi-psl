@@ -1,5 +1,7 @@
 package model
 
+import model.Piece.Orientation
+
 /**
  * Created by David on 22. 6. 2015.
  */
