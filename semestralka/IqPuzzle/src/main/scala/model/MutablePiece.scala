@@ -9,11 +9,12 @@ import model.MutablePiece.{Horizontal, Vertical, Orientation}
 abstract class MutablePiece(override val array: Array[Array[Int]], val orientation: Orientation)
   extends Piece(array)
 {
-  def reverse {
+  override def reverse: this.type = {
+    /*
     match orientation {
       case Vertical => {
         array.foreach( row => arraySwap(row))
-        array
+
         // Prohodim 1. a posledni sloupec
       }
       case Horizontal => {
@@ -21,9 +22,11 @@ abstract class MutablePiece(override val array: Array[Array[Int]], val orientati
        // Prohodim 1. a posledni radek
       }
     }
-
-    MutablePiece(array, orientation)
+  */
+    new this.type (array, orientation)
   }
+
+  def rotate = this
 
   def arraySwap[T](array: Array[T]) = {
     if (array.length > 2) {
@@ -33,6 +36,15 @@ abstract class MutablePiece(override val array: Array[Array[Int]], val orientati
     }
     array
   }
+
+  def getAllVariants = {
+     for (i <- 1 to 4)
+       yield this rotate
+       // yield this rotate reverse
+
+  }
+
+  def createInstance(array: Array[Array[Int]], orientation: Orientation): this.type
 }
 
 object MutablePiece

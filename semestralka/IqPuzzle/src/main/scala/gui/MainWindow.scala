@@ -9,18 +9,18 @@ import scalafx.scene.shape.Rectangle
  * Created by David on 22. 6. 2015.
  */
 object MainWindow extends JFXApp {
+  val drawer = new PieceDrawer
+  print(drawer.getColor(model.pieces.A))
+  print(drawer.getColor(model.pieces.A reverse))
+
+
   stage = new JFXApp.PrimaryStage {
-    title.value = "Hello Stage"
+    title.value = "IQ Puzzle"
     width = 600
     height = 450
     scene = new Scene() {
-      fill = Color.LIGHTGREEN
-      content = new Rectangle() {
-        x = 25
-        y = 40
-        width = 100
-        height = 100
-      }
+      getChildren add new GameBoard
+      getChildren add new MainMenu
     }
   }
 }

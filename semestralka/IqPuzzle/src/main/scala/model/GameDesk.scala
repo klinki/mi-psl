@@ -5,6 +5,9 @@ package model
  */
 class GameDesk
 {
+  val Rows = 5
+  val Cols = 11
+
   val desk: Array[Array[Int]] = Array.tabulate(11, 5){(x, y) => 0}
   val pieces: Array[Piece] = new Array[Piece](12)
 
