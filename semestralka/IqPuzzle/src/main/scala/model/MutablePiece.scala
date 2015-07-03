@@ -1,32 +1,28 @@
 package model
 
+import model.GameDesk.Coordinates
 import model.MutablePiece.{Horizontal, Vertical, Orientation}
 
 
 /**
  * Created by David on 22. 6. 2015.
  */
-abstract class MutablePiece(override val array: Array[Array[Int]], val orientation: Orientation)
-  extends Piece(array)
+abstract class MutablePiece(override val array: Array[Array[Int]],
+                            val orientation: Orientation,
+                            override val position: Option[Coordinates] = None,
+                            override val isLocked: Boolean = false)
+  extends Piece(array, position, isLocked)
 {
-  override def reverse: this.type = {
-    /*
-    match orientation {
-      case Vertical => {
-        array.foreach( row => arraySwap(row))
+  def reverseX = reverse(Horizontal)
+  def reverseY = reverse(Vertical)
 
-        // Prohodim 1. a posledni sloupec
-      }
-      case Horizontal => {
-        arraySwap(array)
-       // Prohodim 1. a posledni radek
-      }
-    }
-  */
-    new this.type (array, orientation)
+  def reverse: MutablePiece = reverse(Horizontal)
+
+  def reverse(orientation: Orientation): MutablePiece = {
+    createInstance(reverseArray(array, orientation), orientation)
   }
 
-  def rotate = this
+  def rotate: MutablePiece = reverse(Horizontal)
 
   def arraySwap[T](array: Array[T]) = {
     if (array.length > 2) {
@@ -36,15 +32,32 @@ abstract class MutablePiece(override val array: Array[Array[Int]], val orientati
     }
     array
   }
-
-  def getAllVariants = {
-     for (i <- 1 to 4)
-       yield this rotate
-       // yield this rotate reverse
-
+  def reverseArray(array: Array[Array[Int]], orientation: Orientation): Array[Array[Int]] = {
+    val newArray = array.clone()
+    orientation match {
+      case Vertical => newArray.foreach(arraySwap)
+      // Prohodim 1. a posledni sloupec
+      case Horizontal => arraySwap(newArray)
+      // Prohodim 1. a posledni radek
+    }
+    newArray
   }
 
-  def createInstance(array: Array[Array[Int]], orientation: Orientation): this.type
+  def getAllVariants = {
+    // TODO: There are 8 variants - 2 kind of orientation and 4 rotations
+    var piecesList: List[Piece]= List()
+    var piece = this
+
+    for (i <- 1 to 4) {
+      piecesList = piece :: piecesList
+      piecesList = piece.reverse(Horizontal) :: piecesList
+      piecesList = piece.reverse(Vertical) :: piecesList
+      piece = piece rotate
+    }
+    piecesList
+  }
+
+  def createInstance(array: Array[Array[Int]], orientation: Orientation): MutablePiece = this
 }
 
 object MutablePiece

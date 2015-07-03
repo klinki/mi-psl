@@ -9,8 +9,8 @@ import model.MutablePiece.{Orientation, Vertical}
 class J(override val array: Array[Array[Int]], override val orientation: Orientation)
   extends MutablePiece(array, orientation)
 {
-  override def rotate = new J(array.transpose, orientation.rotate)
-  override def reverse = this
+  override def rotate: J = new J(array.transpose, orientation.rotate)
+  override def reverse: J = this
 }
 
 case object J extends J(Array(Array(0, 1, 0, 0),

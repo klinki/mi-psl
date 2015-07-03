@@ -8,6 +8,6 @@ import model.MutablePiece.Orientation
 class SymmetricPiece(override val array: Array[Array[Int]], override val orientation: Orientation)
   extends MutablePiece(array, orientation)
 {
-  override def rotate = new SymmetricPiece(array.transpose, orientation.rotate)
-  override def reverse: Piece = rotate rotate
+  override def rotate: MutablePiece = new SymmetricPiece(array.transpose, orientation.rotate)
+  override def reverse: MutablePiece = rotate rotate
 }

@@ -7,9 +7,4 @@ class GameEngine
 {
   val desk = new GameDesk
   val pieces = new Array[Piece](12)
-
-  // val freePieces = new List[Piece]
-
-  def loadLevel(levelCreator: LevelCreator) = levelCreator createLevel
-
 }

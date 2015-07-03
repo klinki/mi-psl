@@ -1,13 +1,14 @@
 package gui
 
+import model.GameDesk.Coordinates
 import model.Piece
 import model.pieces._
 
 import scalafx.geometry.Point2D
-import scalafx.scene.Scene
 import scalafx.scene.Group
 import scalafx.scene.paint.Color
-import scalafx.scene.shape.Rectangle
+import scalafx.scene.Node
+import scalafx.scene.shape.{Shape, Rectangle}
 
 /**
  * Created by David on 25. 6. 2015.
@@ -18,8 +19,8 @@ class PieceDrawer
   val PieceHeight = 16
 
   def draw(piece: Piece) = {
-    val startingPosition = new Point2D(0.0, 0.0)
-    var currentPosition = new Point2D(startingPosition)
+    val startingPosition = piece.position.get
+    var currentPosition = startingPosition
 
     val group = new Group
 
@@ -32,11 +33,13 @@ class PieceDrawer
               fill = getColor(piece)
             }
           }
-          currentPosition = new Point2D(currentPosition.x, currentPosition.y + PieceHeight)
+          currentPosition = new Coordinates(currentPosition.x, currentPosition.y + PieceHeight)
         }
       )
-      currentPosition = new Point2D(currentPosition.x + PieceWidth, currentPosition.y)
+      currentPosition = new Coordinates(currentPosition.x + PieceWidth, currentPosition.y)
     })
+
+    group
   }
 
   def getColor(piece: Piece) = piece match {
