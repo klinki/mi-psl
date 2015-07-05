@@ -10,7 +10,8 @@ import model.MutablePiece.{Orientation, Horizontal}
 class B(override val array: Array[Array[Int]], override val orientation: Orientation)
   extends MutablePiece(array, orientation)
 {
-  override def createInstance(array: Array[Array[Int]], orientation: Orientation): B = new B(array, orientation)
+  override def createInstance(array: Array[Array[Int]], orientation: Orientation): B =
+    new B(array, orientation)
 }
 
 

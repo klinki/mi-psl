@@ -10,8 +10,10 @@ import scalafx.geometry.Point2D
 class A(override val array: Array[Array[Int]], override val orientation: Orientation)
   extends MutablePiece(array, orientation)
 {
-  override def createInstance(array: Array[Array[Int]], orientation: Orientation): MutablePiece =
+  override def createInstance(array: Array[Array[Int]], orientation: Orientation): A =
     new A(array, orientation)
+
+  override def rotate(): A = super.rotate().asInstanceOf[A]
 }
 
 case object A extends A(Array(Array(1, 1, 1),

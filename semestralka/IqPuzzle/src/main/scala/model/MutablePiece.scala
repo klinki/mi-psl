@@ -16,13 +16,14 @@ abstract class MutablePiece(override val array: Array[Array[Int]],
   def reverseX = reverse(Horizontal)
   def reverseY = reverse(Vertical)
 
-  def reverse[T: Piece]: MutablePiece = reverse(Horizontal)
+  def reverse(): MutablePiece = reverse(Horizontal)
 
-  def reverse[T: Piece](orientation: Orientation): MutablePiece = {
+  def reverse(orientation: Orientation): MutablePiece = {
     createInstance(reverseArray(array, orientation), orientation)
   }
 
-  def rotate: MutablePiece = reverse(Horizontal)
+  def rotate(): this.type =
+    createInstance(reverseArray(array.transpose, Vertical), orientation.rotate)
 
   def arraySwap[T](array: Array[T]) = {
     if (array.length > 2) {
@@ -57,7 +58,7 @@ abstract class MutablePiece(override val array: Array[Array[Int]],
     piecesList
   }
 
-  def createInstance(array: Array[Array[Int]], orientation: Orientation): MutablePiece = this
+  def createInstance(array: Array[Array[Int]], orientation: Orientation): this.type = this
 }
 
 object MutablePiece

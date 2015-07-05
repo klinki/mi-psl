@@ -12,6 +12,9 @@ abstract class Piece(val array: Array[Array[Int]],
   def width = array.length
   def height = array(0).length
 
+  def rotate(): Piece
+  def reverse(): Piece
+
   def getAllVariants: Seq[Piece]
 
   def getFromArray(array: Array[Array[Int]]) = {
@@ -26,9 +29,6 @@ abstract class Piece(val array: Array[Array[Int]],
 
     matchingVariant
   }
-
-  def rotate[T: Piece] (): T
-  def reverse[T: Piece] (): T
 
   override def toString: String = {
     val builder = new StringBuilder()
