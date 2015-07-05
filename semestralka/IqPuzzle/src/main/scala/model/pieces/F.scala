@@ -1,7 +1,7 @@
 package model.pieces
 
-import model.MutablePiece.{Vertical, Orientation}
-import model.SymmetricPiece
+import model.MutablePiece.{Horizontal, Vertical, Orientation}
+import model.{MutablePiece, SymmetricPiece}
 
 
 /**
@@ -11,7 +11,7 @@ class F(override val array: Array[Array[Int]], override val orientation: Orienta
   extends SymmetricPiece(array, orientation)
 {
   override def createInstance(array: Array[Array[Int]], orientation: Orientation): F =
-    new F(array, orientation)
+    new F(array clone, orientation)
 }
 
 case object F extends F(Array(Array(0, 1),

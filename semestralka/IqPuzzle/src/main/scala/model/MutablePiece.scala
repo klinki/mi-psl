@@ -16,14 +16,15 @@ abstract class MutablePiece(override val array: Array[Array[Int]],
   def reverseX = reverse(Horizontal)
   def reverseY = reverse(Vertical)
 
-  def reverse(): MutablePiece = reverse(Horizontal)
+  def reverse(): MutablePiece =
+    createInstance(multiplyBySecondaryDiagonal(array clone), orientation)
 
   def reverse(orientation: Orientation): MutablePiece = {
     createInstance(reverseArray(array, orientation), orientation)
   }
 
-  def rotate(): this.type =
-    createInstance(reverseArray(array.transpose, Vertical), orientation.rotate)
+  def rotate(): MutablePiece =
+    createInstance(multiplyBySecondaryDiagonal(array.clone.transpose), orientation.rotate)
 
   def arraySwap[T](array: Array[T]) = {
     if (array.length > 2) {
@@ -58,7 +59,32 @@ abstract class MutablePiece(override val array: Array[Array[Int]],
     piecesList
   }
 
-  def createInstance(array: Array[Array[Int]], orientation: Orientation): this.type = this
+  def createInstance(array: Array[Array[Int]], orientation: Orientation): MutablePiece = this
+
+  def multiplyBySecondaryDiagonal(array: Array[Array[Int]]): Array[Array[Int]] = {
+    var currentRow = 0
+    var currentCol = array.length - 1
+    val secondaryDiagonal = Array.tabulate(array.length, array.length){
+      (y, x) => {
+        if (y == currentRow && x == currentCol) {
+          currentRow += 1
+          currentCol -= 1
+          1
+        }
+        else
+          0
+      }
+    }
+
+    def mult[A](a: Array[Array[A]], b: Array[Array[A]])(implicit n: Numeric[A]) = {
+      import n._
+      for (row <- a)
+        yield for(col <- b.transpose)
+          yield row zip col map Function.tupled(_*_) reduceLeft (_+_)
+    }
+
+    mult(array, secondaryDiagonal).map(_.toList.toArray)
+  }
 }
 
 object MutablePiece

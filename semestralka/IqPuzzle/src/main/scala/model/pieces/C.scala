@@ -14,6 +14,6 @@ class C(override val array: Array[Array[Int]], override val orientation: Orienta
 }
 
 case object C extends C(Array(Array(0, 1, 0, 0),
-                                         Array(0, 1, 0, 0),
-                                         Array(0, 1, 0, 0),
-                                         Array(1, 1, 0, 0)), Horizontal)
+                              Array(0, 1, 0, 0),
+                              Array(0, 1, 0, 0),
+                              Array(1, 1, 0, 0)), Horizontal)
