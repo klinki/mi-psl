@@ -6,7 +6,7 @@ import model.GameDesk.Coordinates
  * Created by David on 14. 6. 2015.
  */
 class GameDesk(val desk: Array[Array[Int]] = Array.tabulate(GameDesk.Rows, GameDesk.Cols){(x, y) => 0},
-               val pieces: List[Piece] = List())
+               val pieces: Set[Piece] = Set())
 {
   def canInsertPiece(piece: Piece): Boolean = {
     getAllEmptyCoordinates.exists(canInsertPiece(piece, _))
@@ -18,25 +18,44 @@ class GameDesk(val desk: Array[Array[Int]] = Array.tabulate(GameDesk.Rows, GameD
     false
   }
 
-  def insertPiece(piece: Piece, position: Coordinates) = {
-    if (canInsertPiece(piece, position)) {
-      var rowNum = 0
+  def insertPiece(piece: Piece, position: Coordinates): GameDesk = {
+    if (!canInsertPiece(piece, position)) {
+      throw new Exception()
+    }
 
-      piece.array.foreach(row => {
+    var rowNum = 0
+
+    piece.array.foreach(row => {
         var colNum = 0
         row.foreach(value => {
           desk(position.x + rowNum)(position.y + colNum) = value
           colNum += 1
         })
         rowNum += 1
-      })
+    })
 
-      new GameDesk(desk, piece :: pieces)
-    }
+    new GameDesk(desk, pieces + piece)
   }
 
-  def removePiece(piece: Piece, position: Coordinates) = {
+  def removePiece(piece: Piece): GameDesk = {
+    if (! pieces.contains(piece)) {
+      throw new Exception();
+    }
 
+    var rowNum = 0
+
+    piece.array.foreach(row => {
+      var colNum = 0
+      row.foreach(value => {
+        if (value != 0) {
+          desk(piece.position.get.x + rowNum)(piece.position.get.y + colNum) = 0
+        }
+        colNum += 1
+      })
+      rowNum += 1
+    })
+
+    new GameDesk(desk, pieces - piece)
   }
 
   def getEmptyCoordinates = {

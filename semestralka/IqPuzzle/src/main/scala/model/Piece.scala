@@ -27,6 +27,9 @@ abstract class Piece(val array: Array[Array[Int]],
     matchingVariant
   }
 
+  def rotate[T: Piece] (): T
+  def reverse[T: Piece] (): T
+
   override def toString: String = {
     val builder = new StringBuilder()
     array.foreach(row => {

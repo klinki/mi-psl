@@ -20,12 +20,15 @@ object MainWindow extends JFXApp {
     title.value = "IQ Puzzle"
     width = 640
     height = 480
+    minWidth = 385
+    minHeight = 420
     scene = new Scene(new BorderPane {
       right = new MainMenu
       center = new BorderPane {
-        top = new MainMenu
-        center = new GameBoard
+        top = new FreePiecesPanel
+        center = new GridLayout
       }
+      bottom = new GameBoard
     })
   }
 }

@@ -16,9 +16,9 @@ abstract class MutablePiece(override val array: Array[Array[Int]],
   def reverseX = reverse(Horizontal)
   def reverseY = reverse(Vertical)
 
-  def reverse: MutablePiece = reverse(Horizontal)
+  def reverse[T: Piece]: MutablePiece = reverse(Horizontal)
 
-  def reverse(orientation: Orientation): MutablePiece = {
+  def reverse[T: Piece](orientation: Orientation): MutablePiece = {
     createInstance(reverseArray(array, orientation), orientation)
   }
 
