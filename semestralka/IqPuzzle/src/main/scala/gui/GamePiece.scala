@@ -1,9 +1,11 @@
 package gui
 
+import javafx.scene.input
 import javafx.scene.input.{MouseButton, MouseEvent}
 
 import model.Piece
-import model.pieces._
+import model.PieceType.PieceType
+import model.PieceType._
 
 import scalafx.Includes._
 import scalafx.geometry.Point2D
@@ -30,7 +32,7 @@ class GamePiece(var piece: Piece, var location: Point2D) extends Group
           val rect = new Rectangle {
             x = currentPosition.x
             y = currentPosition.y
-            fill = getColor(piece)
+            fill = getColor(piece pieceType)
             width = PieceWidth
             height = PieceHeight
             stroke = Color.BLACK
@@ -50,19 +52,19 @@ class GamePiece(var piece: Piece, var location: Point2D) extends Group
  // children add draw()
   // getChildren add draw()
 
-  def getColor(piece: Piece) = piece match {
+  def getColor(piece: PieceType) = piece match {
     case A => Color.ORANGE
     case B => Color.RED
     case C => Color.DARKBLUE
     case D => Color.LIGHTPINK
     case E => Color.DARKGREEN
-    case F => Color.GREY
+    case F => Color.LIGHTGREY
     case G => Color.LIGHTBLUE
-    case H => Color.PINK
+    case H => Color.DEEPPINK
     case I => Color.YELLOW
     case J => Color.PURPLE
     case K => Color.LIGHTGREEN
-    case L => Color.LIGHTGREY
+    case L => Color.GREY
     case _ => Color.BLACK
   }
 
@@ -73,8 +75,35 @@ class GamePiece(var piece: Piece, var location: Point2D) extends Group
       } else if (event.getButton eq MouseButton.SECONDARY) {
         piece = piece.reverse()
       }
-      children.clear()
-      draw()
+      self.redraw()
     }
   }
+
+
+  def redraw() = {
+    children.clear()
+    draw()
+  }
+
+  var dragDelta: Point2D = new Point2D(0,0)
+  val self = this
+      /*
+  onMousePressed = new EventHandler[input.MouseEvent] {
+    override def handle(event: input.MouseEvent): Unit = {
+      dragDelta = new Point2D(location.x - event.getSceneX,
+        location.y - event.getSceneY)
+      //event.setDragDetect(true)
+      self.setMouseTransparent(true)
+    }
+  }
+
+  onMouseDragged = new EventHandler[input.MouseEvent] {
+    override def handle(event: input.MouseEvent): Unit = {
+      location = new Point2D(event.getSceneX + dragDelta.x, event.getSceneY + dragDelta.y)
+      // println("OnMouseDragged")
+      self.setMouseTransparent(true)
+      self.redraw()
+      event.consume()
+    }
+  }    */
 }

@@ -54,8 +54,6 @@ class GridLayout extends GridPane
     new CornerRadii(0),
     Insets(0))))
 
-  val drawer = new PieceDrawer
-
   var allRectangles: List[Rectangle] = List()
 
   var pieceWidth = width / 15

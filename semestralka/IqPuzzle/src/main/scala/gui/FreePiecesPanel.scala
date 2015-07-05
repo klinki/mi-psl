@@ -1,6 +1,13 @@
 package gui
 
+import java.util.function.Consumer
+import javafx.event.EventHandler
+import javafx.scene
+import javafx.scene.input.MouseEvent
+
 import scalafx.geometry.Point2D
+import scalafx.scene.Node
+import scalafx.scene.input.DragEvent
 import scalafx.scene.layout.FlowPane
 
 /**
@@ -22,4 +29,17 @@ class FreePiecesPanel extends FlowPane(5, 10)
   children add new GamePiece(model.pieces.J, new Point2D(740 ,0))
   children add new GamePiece(model.pieces.K, new Point2D(810 ,0))
   children add new GamePiece(model.pieces.L, new Point2D(880 ,0))
+
+  val self = this
+   /*
+  children.forEach(new Consumer[scene.Node] {
+    override def accept(node: scene.Node): Unit = {
+      node.setOnDragDetected(new EventHandler[MouseEvent] {
+        override def handle(event: MouseEvent): Unit = {
+          self.children.remove(this)
+        }
+      })
+    }
+  })
+  */
 }

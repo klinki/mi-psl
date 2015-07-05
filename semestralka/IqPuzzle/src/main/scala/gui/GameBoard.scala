@@ -120,8 +120,6 @@ class GameBoard extends Pane
     new CornerRadii(0),
     Insets(0))))
 
-  val drawer = new PieceDrawer
-
   var allRectangles: List[Rectangle] = List()
 
   var pieceWidth = width / 15
@@ -129,7 +127,7 @@ class GameBoard extends Pane
 
   val startX = 0 // (width.value  - (pieceWidth.doubleValue() + 16) * GameDesk.Cols) / 2
   val startY = 0 //(height.value  - (pieceHeight.doubleValue() + 16) * GameDesk.Rows) / 2
- /*
+
   for (i <- 0 until GameDesk.Rows)
   {
     for (j <- 0 until GameDesk.Cols)
@@ -148,7 +146,7 @@ class GameBoard extends Pane
       children.add(rect)
     }
   }
-            */
+
 
   //children.addAll(allRectangles)
   def getCoordinates(gamePiece: GamePiece): Option[Coordinates] = {

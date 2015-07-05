@@ -1,11 +1,13 @@
 package model
 
+import model.PieceType._
 import model.GameDesk.Coordinates
 
 /**
  * Created by David on 14. 6. 2015.
  */
 abstract class Piece(val array: Array[Array[Int]],
+                     val pieceType: PieceType,
                      val position: Option[Coordinates] = None,
                      val isLocked: Boolean = false)
 {
@@ -44,10 +46,10 @@ abstract class Piece(val array: Array[Array[Int]],
 
 object Piece
 {
-  var registeredPiecesList: List[Piece] = List()
+  var registeredPiecesList: Set[Piece] = Set()
 
   def registerPiece(piece: Piece) = {
-    registeredPiecesList = piece :: registeredPiecesList
+    registeredPiecesList = registeredPiecesList + piece
   }
 
   def registeredPieces = registeredPiecesList
