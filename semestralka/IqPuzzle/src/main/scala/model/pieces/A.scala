@@ -1,21 +1,15 @@
 package model.pieces
 
 import model.MutablePiece.{Orientation, Horizontal}
-import model.{MutablePiece, Piece}
+import model.{PieceType, MutablePiece, Piece}
 import scalafx.geometry.Point2D
 
 /**
  * Created by David on 22. 6. 2015.
  */
-class A(override val array: Array[Array[Int]], override val orientation: Orientation)
-  extends MutablePiece(array, orientation)
+case object A extends MutablePiece(Array(Array(1, 1, 1),
+                                         Array(1, 0, 0),
+                                         Array(0, 0, 0)), PieceType.A, Horizontal)
 {
-  override def createInstance(array: Array[Array[Int]], orientation: Orientation): A =
-    new A(array, orientation)
 
-  override def rotate(): A = super.rotate().asInstanceOf[A]
 }
-
-case object A extends A(Array(Array(1, 1, 1),
-                              Array(1, 0, 0),
-                              Array(0, 0, 0)), Horizontal)

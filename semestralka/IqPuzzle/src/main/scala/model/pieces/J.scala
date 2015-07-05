@@ -1,19 +1,15 @@
 package model.pieces
 
-import model.MutablePiece
+import model.{PieceType, Piece, MutablePiece}
 import model.MutablePiece.{Orientation, Vertical}
 
 /**
  * Created by David on 22. 6. 2015.
  */
-class J(override val array: Array[Array[Int]], override val orientation: Orientation)
-  extends MutablePiece(array, orientation)
+case object J extends MutablePiece(Array(Array(0, 1, 0, 0),
+                                         Array(0, 1, 0, 0),
+                                         Array(0, 1, 0, 0),
+                                         Array(0, 1, 0, 0)), PieceType.J, Vertical)
 {
-  override def rotate(): J = new J(array.transpose, orientation.rotate)
-  override def reverse(): J = this
+  Piece.registerPiece(this)
 }
-
-case object J extends J(Array(Array(0, 1, 0, 0),
-                              Array(0, 1, 0, 0),
-                              Array(0, 1, 0, 0),
-                              Array(0, 1, 0, 0)), Vertical)

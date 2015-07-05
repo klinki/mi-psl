@@ -1,19 +1,15 @@
 package model.pieces
 
-import model.MutablePiece
+import model.{PieceType, Piece, MutablePiece}
 import model.MutablePiece.{Orientation, Horizontal}
 
 /**
  * Created by David on 22. 6. 2015.
  */
-class D(override val array: Array[Array[Int]], override val orientation: Orientation)
-  extends MutablePiece(array, orientation)
+case object D extends MutablePiece(Array(Array(0, 1, 0, 0),
+                                         Array(0, 1, 0, 0),
+                                         Array(1, 1, 0, 0),
+                                         Array(0, 1, 0, 0)), PieceType.D, Horizontal)
 {
-  override def createInstance(array: Array[Array[Int]], orientation: Orientation): D =
-    new D(array, orientation)
+  Piece.registerPiece(this)
 }
-
-case object D extends D(Array(Array(0, 1, 0, 0),
-                              Array(0, 1, 0, 0),
-                              Array(1, 1, 0, 0),
-                              Array(0, 1, 0, 0)), Horizontal)
