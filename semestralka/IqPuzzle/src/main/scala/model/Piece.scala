@@ -18,27 +18,17 @@ abstract class Piece(val array: Array[Array[Int]],
   def rotate(): Piece
   def reverse(): Piece
 
-  val (leftUpperCorner, rightLowerCorner) = getStartingPosition
-    /*
-  def leftUpperCorner = getStartingPosition._1
-  def rightLowerCorner = getStartingPosition._2
-                 */
+  val (leftUpperCorner, rightLowerCorner) = getBoundaries
 
-  def getStartingPosition = {
+  def getBoundaries = {
     val rowCollection = array.map(_.map(_ != 0).reduceLeft(_ || _))
-    val colCollection = array.map(_.indexWhere(_ != 0))
-    /*
-      val rowStart = array.indexWhere(_.map(_ != 0).reduceLeft(_ || _))
-      val colStart = array.map(_.indexWhere(_ != 0)).min
+    val colCollection = array.map(_.indexWhere(_ != 0)).filter(_ >= 0)
 
-      var rowEnd = array.lastIndexWhere(_.map(_ != 0).reduceLeft(_ || _))
-      var colEnd = array.map(_.indexWhere(_ != 0)).max
-    */
     val rowStart = rowCollection.indexWhere(_ == true)
     val rowEnd   = rowCollection.lastIndexWhere(_ == true)
 
-    val colStart = colCollection.min
-    val colEnd = colCollection.max
+    val colStart = array(rowStart).indexWhere(_ != 0)
+    val colEnd = array(rowEnd).lastIndexWhere(_ != 0)
 
     ((rowStart, colStart), (rowEnd, colEnd))
   }

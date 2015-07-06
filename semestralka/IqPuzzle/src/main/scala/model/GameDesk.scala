@@ -23,6 +23,11 @@ class GameDesk(val desk: Array[Array[Int]] =
     if (! unalignedPices.contains(piece) || ! doesPieceFit(piece, position))
       false
     else {
+      val slicedArray =
+        piece.array.slice(piece.leftUpperCorner._1, piece.rightLowerCorner._2)
+
+
+
       var rowNum = -1
       piece.array.map(row => {
         rowNum += 1
