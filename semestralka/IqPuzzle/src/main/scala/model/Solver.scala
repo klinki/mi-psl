@@ -18,19 +18,24 @@ class Solver(val desk: GameDesk) {
     solutions.nonEmpty
   }
 
-  def findFirstSolution = findAllSolutions(desk, true)
+  def findFirstSolution() = findAllSolutions(desk, true)
 
-  def findAllSolutions(gameDesk: GameDesk, firstSolutionOnly: Boolean = false) = {
+  def findAllSolutions(gameDesk: GameDesk, firstSolutionOnly: Boolean = false): Unit = {
     val position = gameDesk.getEmptyCoordinates
 
     if (position.isEmpty) {
       solutions = desk :: solutions
     } else {
-      gameDesk.pieces.foreach {
+      gameDesk.unalignedPices.foreach {
         piece => piece.getAllVariants.foreach {
           pieceVariant => {
             if (!firstSolutionOnly || solutions.isEmpty) {
-              gameDesk.insertPiece(piece, position.get)
+              if (gameDesk.canInsertPiece(piece, position.get)) {
+                val newDesk = gameDesk.insertPiece(piece, position.get)
+
+                if (! newDesk.doesHaveDeadPiece && ! newDesk.doesHaveDeadSpot)
+                    findAllSolutions(newDesk, firstSolutionOnly)
+              }
             }
           }
         }

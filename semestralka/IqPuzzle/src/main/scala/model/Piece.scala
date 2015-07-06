@@ -10,7 +10,7 @@ import model.pieces._
 abstract class Piece(val array: Array[Array[Int]],
                      val pieceType: PieceType,
                      val position: Option[Coordinates] = None,
-                     val isLocked: Boolean = false)
+                     val isLocked: Boolean = false) extends ArrayPrinter
 {
   def width = array.transpose.map(_.map(_ != 0).reduceLeft(_ || _)).count(_ == true)
   def height = array.map(_.map(_ != 0).reduceLeft(_ || _)).count(_ == true)
@@ -18,19 +18,26 @@ abstract class Piece(val array: Array[Array[Int]],
   def rotate(): Piece
   def reverse(): Piece
 
-  val (leftUpperCorner, rightLowerCorner) = getBoundaries
+  val (rowBoundaries, colBoundaries) = getBoundaries
 
   def getBoundaries = {
     val rowCollection = array.map(_.map(_ != 0).reduceLeft(_ || _))
-    val colCollection = array.map(_.indexWhere(_ != 0)).filter(_ >= 0)
-
+                    // TODO: ZIP
     val rowStart = rowCollection.indexWhere(_ == true)
     val rowEnd   = rowCollection.lastIndexWhere(_ == true)
 
-    val colStart = array(rowStart).indexWhere(_ != 0)
-    val colEnd = array(rowEnd).lastIndexWhere(_ != 0)
+    val colStart = array.map(_.indexWhere(_ != 0)).filter(_ >= 0).min
+    val colEnd = array.map(_.lastIndexWhere(_ != 0)).filter(_ >= 0).max
 
-    ((rowStart, colStart), (rowEnd, colEnd))
+    ((rowStart, rowEnd), (colStart, colEnd))
+  }
+
+  val (leftUpperCorner, rightLowerCorner) = getCorners
+
+  def getCorners = {
+    val colStart = array(rowBoundaries._1).indexWhere(_ != 0)
+    val colEnd = array(rowBoundaries._2).lastIndexWhere(_ != 0)
+    ((rowBoundaries._1, colStart), (rowBoundaries._2, colEnd))
   }
 
   def getAllVariants: Seq[Piece]
@@ -46,17 +53,6 @@ abstract class Piece(val array: Array[Array[Int]],
     }
 
     matchingVariant
-  }
-
-  override def toString: String = {
-    val builder = new StringBuilder()
-    array.foreach(row => {
-      row.foreach(char => {
-        builder.append(char)
-      })
-      builder.append('\n')
-    })
-    builder toString
   }
 }
 
