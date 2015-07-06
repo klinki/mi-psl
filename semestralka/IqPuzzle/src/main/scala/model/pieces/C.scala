@@ -11,5 +11,5 @@ case object C extends MutablePiece(Array(Array(0, 1, 0, 0),
                                          Array(0, 1, 0, 0),
                                          Array(1, 1, 0, 0)), PieceType.C, Horizontal)
 {
-  Piece.registerPiece(this)
+
 }

@@ -11,5 +11,8 @@ case object J extends MutablePiece(Array(Array(0, 1, 0, 0),
                                          Array(0, 1, 0, 0),
                                          Array(0, 1, 0, 0)), PieceType.J, Vertical)
 {
-  Piece.registerPiece(this)
+  override def reverse() = this
+  override def getAllVariants = {
+    List(this, this rotate)
+  }
 }

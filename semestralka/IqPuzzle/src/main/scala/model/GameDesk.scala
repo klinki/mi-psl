@@ -5,17 +5,34 @@ import model.GameDesk.Coordinates
 /**
  * Created by David on 14. 6. 2015.
  */
-class GameDesk(val desk: Array[Array[Int]] = Array.tabulate(GameDesk.Rows, GameDesk.Cols){(x, y) => 0},
-               val pieces: Set[Piece] = Set())
+class GameDesk(val desk: Array[Array[Int]] =
+                Array.tabulate(GameDesk.Rows, GameDesk.Cols){(x, y) => 0},
+               val pieces: Set[Piece] = Set(),
+               val unalignedPices: Set[Piece] = Set())
 {
   def canInsertPiece(piece: Piece): Boolean = {
     getAllEmptyCoordinates.exists(canInsertPiece(piece, _))
   }
 
+  def doesPieceFit(piece: Piece, position: Coordinates): Boolean = {
+    (position.x + piece.width < GameDesk.Cols
+      && position.y + piece.height < GameDesk.Rows)
+  }
+
   def canInsertPiece(piece: Piece, position: Coordinates): Boolean = {
-
-
-    false
+    if (! unalignedPices.contains(piece) || ! doesPieceFit(piece, position))
+      false
+    else {
+      var rowNum = -1
+      piece.array.map(row => {
+        rowNum += 1
+        var colNum = -1
+        row.map(value => {
+          colNum += 1
+          value == 0 || desk(position.x + rowNum)(position.y + colNum) == 0
+        }).reduceLeft( _ & _)
+      }).reduceLeft( _ & _)
+    }
   }
 
   def insertPiece(piece: Piece, position: Coordinates): GameDesk = {
@@ -23,23 +40,24 @@ class GameDesk(val desk: Array[Array[Int]] = Array.tabulate(GameDesk.Rows, GameD
       throw new Exception()
     }
 
+    val newDesk = desk clone
     var rowNum = 0
 
     piece.array.foreach(row => {
         var colNum = 0
         row.foreach(value => {
-          desk(position.x + rowNum)(position.y + colNum) = value
+          newDesk(position.x + rowNum)(position.y + colNum) = value
           colNum += 1
         })
         rowNum += 1
     })
 
-    new GameDesk(desk, pieces + piece)
+    new GameDesk(newDesk, pieces + piece, unalignedPices - piece)
   }
 
   def removePiece(piece: Piece): GameDesk = {
     if (! pieces.contains(piece)) {
-      throw new Exception();
+      throw new Exception()
     }
 
     var rowNum = 0
