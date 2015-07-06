@@ -13,7 +13,7 @@ abstract class SymmetricPiece(override val array: Array[Array[Int]],
 {
   override def reverse(): MutablePiece = rotate rotate
 
-  override def getAllVariants() = {
+  override def getAllVariants = {
     var piecesList: List[Piece] = List()
     var piece: Piece = this
 

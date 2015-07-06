@@ -36,6 +36,18 @@ extends ArrayPrinter
       && position.col + piece.width <= GameDesk.Cols)
   }
 
+  def getBoundaries(array: Array[Array[Int]]) = {
+    val rowCollection = array.map(_.map(_ != 0).reduceLeft(_ || _))
+    // TODO: ZIP
+    val rowStart = rowCollection.indexWhere(_ == true)
+    val rowEnd   = rowCollection.lastIndexWhere(_ == true)
+
+    val colStart = array.map(_.indexWhere(_ != 0)).filter(_ >= 0).min
+    val colEnd = array.map(_.lastIndexWhere(_ != 0)).filter(_ >= 0).max
+
+    ((rowStart, rowEnd), (colStart, colEnd))
+  }
+
   def getCorners(array: Array[Array[Int]]) = {
     val rowCollection = array.map(_.map(_ != 0).reduceLeft(_ || _))
     val rowStart = rowCollection.indexWhere(_ == true)
@@ -47,7 +59,7 @@ extends ArrayPrinter
   }
 
   def canInsertPiece(piece: Piece, position: Coordinates): Boolean = {
-    if (! unalignedPices.contains(piece) || ! doesPieceFit(piece, position))
+    if (! unalignedPices.exists(_.pieceType == piece.pieceType))
       false
     else {
       val slicedArray =
@@ -65,14 +77,31 @@ extends ArrayPrinter
           }
         }.filter(_.isDefined).map(_.get)
 
+      val boundaries = getBoundaries(slicedArray)
+
       // starting point in game desk is position
       // starting point in piece is equal to left upper corner
-      val startPoint = getCorners(slicedArray)._1
+      var startPoint = (boundaries._1._1, boundaries._2._1)
+
+      // If you cannot go down, select leftmost lower corner
+      if (position.row + piece.height - 1 >= GameDesk.Rows) {
+        startPoint = (boundaries._1._2, startPoint._2)
+      }
+
+      // if you cannot go right, select rightmost coordinate
+      if (position.col + piece.width - 1 >= GameDesk.Cols) {
+        startPoint = (startPoint._1, boundaries._2._2)
+      }
 
       val booleanArray = indeces.map( x => {
         val (row, col) = x
-        val sol = array(position.row + row - startPoint._1)(position.col + col - startPoint._2) == 0
-        sol
+        val arrayRow = position.row + row - startPoint._1
+        val arrayCol = position.col + col - startPoint._2
+
+        if (arrayRow < 0 || arrayCol < 0 || arrayRow >= GameDesk.Rows || arrayCol >= GameDesk.Cols )
+          false
+        else
+          array(position.row + row - startPoint._1)(position.col + col - startPoint._2) == 0
       })
 
       booleanArray.reduceLeft( _ && _)
@@ -85,21 +114,47 @@ extends ArrayPrinter
     }
 
     val newDesk = array.map(_.clone)
-    var rowNum = 0
-    val desk = new model.GameDesk(Array.tabulate(model.GameDesk.Rows, model.GameDesk.Cols){(x, y) => 0},
-      Set(),
-      model.Piece.registeredPieces)
+
     val slicedArray =
       piece.array.slice(piece.rowBoundaries._1, piece.rowBoundaries._2 + 1)
-        .map(_.slice(piece.colBoundaries._1, piece.colBoundaries._2 +   1))
+        .map(_.slice(piece.colBoundaries._1, piece.colBoundaries._2 + 1))
 
-    slicedArray.foreach(row => {
-        var colNum = 0
-        row.foreach(value => {
-          newDesk(position.row + rowNum)(position.col + colNum) = value
-          colNum += 1
-        })
-        rowNum += 1
+    val indeces = slicedArray.zipWithIndex.flatMap {
+      case (rowArray, row) => rowArray.zipWithIndex.map {
+        case (value, col) => {
+          if (value != 0)
+            Some((row, col))
+          else
+            None
+        }
+      }
+    }.filter(_.isDefined).map(_.get)
+
+    val boundaries = getBoundaries(slicedArray)
+
+    // starting point in game desk is position
+    // starting point in piece is equal to left upper corner
+    var startPoint = (boundaries._1._1, boundaries._2._1)
+
+    // If you cannot go down, select leftmost lower corner
+    if (position.row + piece.height - 1 >= GameDesk.Rows) {
+      startPoint = (boundaries._1._2, startPoint._2)
+    }
+
+    // if you cannot go right, select rightmost coordinate
+    if (position.col + piece.width - 1 >= GameDesk.Cols) {
+      startPoint = (startPoint._1, boundaries._2._2)
+    }
+
+    val booleanArray = indeces.map( x => {
+      val (row, col) = x
+      val arrayRow = position.row + row - startPoint._1
+      val arrayCol = position.col + col - startPoint._2
+
+      if (arrayRow < 0 || arrayCol < 0 || arrayRow >= GameDesk.Rows || arrayCol >= GameDesk.Cols )
+        false
+      else
+        newDesk(position.row + row - startPoint._1)(position.col + col - startPoint._2) = slicedArray(row)(col)
     })
 
     val pieceToRemove = unalignedPices.find(_.pieceType == piece.pieceType).get
@@ -108,7 +163,7 @@ extends ArrayPrinter
   }
 
   def removePiece(piece: Piece): GameDesk = {
-    if (! pieces.contains(piece)) {
+    if (! pieces.exists(_.pieceType == piece.pieceType)) {
       throw new Exception()
     }
 

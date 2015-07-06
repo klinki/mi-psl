@@ -19,10 +19,11 @@ abstract class Piece(val array: Array[Array[Int]],
   def reverse(): Piece
 
   val (rowBoundaries, colBoundaries) = getBoundaries
+  val (leftUpperCorner, rightLowerCorner) = getCorners
 
   def getBoundaries = {
     val rowCollection = array.map(_.map(_ != 0).reduceLeft(_ || _))
-                    // TODO: ZIP
+    // TODO: ZIP
     val rowStart = rowCollection.indexWhere(_ == true)
     val rowEnd   = rowCollection.lastIndexWhere(_ == true)
 
@@ -31,8 +32,6 @@ abstract class Piece(val array: Array[Array[Int]],
 
     ((rowStart, rowEnd), (colStart, colEnd))
   }
-
-  val (leftUpperCorner, rightLowerCorner) = getCorners
 
   def getCorners = {
     val colStart = array(rowBoundaries._1).indexWhere(_ != 0)

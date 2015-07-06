@@ -4,13 +4,6 @@ package model
  * Created by David on 22. 6. 2015.
  */
 class Solver(val desk: GameDesk) {
-
-  class Solution(val desk: GameDesk) {
-    def isCorrect = desk.isFull
-
-    def isFinal = false // desk.getAllEmptyCoordinates.exists(coordinate =>)
-  }
-
   var solutions: List[GameDesk] = List()
 
   def isSolvable = {
@@ -34,7 +27,7 @@ class Solver(val desk: GameDesk) {
                 val newDesk = gameDesk.insertPiece(piece, position.get)
 
                 if (! newDesk.doesHaveDeadPiece && ! newDesk.doesHaveDeadSpot)
-                    findAllSolutions(newDesk, firstSolutionOnly)
+                  findAllSolutions(newDesk, firstSolutionOnly)
               }
             }
           }
