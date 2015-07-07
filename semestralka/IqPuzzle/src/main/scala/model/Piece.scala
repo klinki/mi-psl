@@ -9,7 +9,7 @@ import model.pieces._
  */
 abstract class Piece(val array: Array[Array[Int]],
                      val pieceType: PieceType,
-                     val position: Option[Coordinates] = None,
+                     var position: Option[Coordinates] = None,
                      val isLocked: Boolean = false) extends ArrayPrinter
 {
   def width = array.transpose.map(_.map(_ != 0).reduceLeft(_ || _)).count(_ == true)

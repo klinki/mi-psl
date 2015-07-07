@@ -17,8 +17,16 @@ newDesk = newDesk.insertPiece(L, new Coordinates(1, 5))
 println(newDesk)
 newDesk = newDesk.insertPiece(B.reverse.rotate.rotate, new Coordinates(2, 2))
 println(newDesk)
-newDesk = newDesk.insertPiece(F, new Coordinates(4, 0))
+newDesk = newDesk.insertPiece(F, new Coordinates(3, 1))
 println(newDesk)
 newDesk = newDesk.insertPiece(J.rotate, new Coordinates(4, 2))
 println(newDesk)
 val solver = new Solver(newDesk)
+
+// newDesk = newDesk.insertPiece(model.pieces.G.rotate.rotate.rotate, new Coordinates(0, 8))
+//newDesk = newDesk.insertPiece(model.pieces.I.rotate.reverse, new Coordinates(1, 8))
+//newDesk = newDesk.insertPiece(model.pieces.H.rotate.rotate, new Coordinates(2, 7))
+
+// newDesk = newDesk.insertPiece(model.pieces.C.rotate.reverse, new Coordinates(3, 10))
+
+solver.findFirstSolution()

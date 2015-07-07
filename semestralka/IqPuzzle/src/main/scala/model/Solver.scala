@@ -17,16 +17,16 @@ class Solver(val desk: GameDesk) {
     val position = gameDesk.getEmptyCoordinates
 
     if (position.isEmpty) {
-      solutions = desk :: solutions
+      solutions = gameDesk :: solutions
     } else {
       gameDesk.unalignedPices.foreach {
         piece => piece.getAllVariants.foreach {
           pieceVariant => {
             if (!firstSolutionOnly || solutions.isEmpty) {
-              if (gameDesk.canInsertPiece(piece, position.get)) {
-                val newDesk = gameDesk.insertPiece(piece, position.get)
+              if (gameDesk.canInsertPiece(pieceVariant, position.get)) {
+                val newDesk = gameDesk.insertPiece(pieceVariant, position.get)
 
-                if (! newDesk.doesHaveDeadPiece && ! newDesk.doesHaveDeadSpot)
+                if (! newDesk.doesHaveDeadPiece ) // && ! newDesk.doesHaveDeadSpot
                   findAllSolutions(newDesk, firstSolutionOnly)
               }
             }

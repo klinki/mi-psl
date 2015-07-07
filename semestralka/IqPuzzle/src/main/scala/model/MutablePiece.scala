@@ -11,9 +11,9 @@ import model.PieceType.PieceType
 class MutablePiece(override val array: Array[Array[Int]],
                    override val pieceType: PieceType,
                             val orientation: Orientation,
-                            override val position: Option[Coordinates] = None,
+                            var pos: Option[Coordinates] = None,
                             override val isLocked: Boolean = false)
-  extends Piece(array, pieceType, position, isLocked)
+  extends Piece(array, pieceType, pos, isLocked)
 {
   def reverse(): MutablePiece = new MutablePiece(
     MutablePiece.multiplyBySecondaryDiagonal(array), pieceType, orientation)

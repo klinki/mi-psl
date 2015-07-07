@@ -9,6 +9,7 @@ trait ArrayPrinter
 
   override def toString: String = {
     val builder = new StringBuilder()
+    builder.append('\n')
     array.foreach(row => {
       row.foreach(char => {
         builder.append(char)

@@ -12,8 +12,12 @@ class GameDesk(val array: Array[Array[Int]] =
 extends ArrayPrinter
 {
   def doesHaveDeadPiece = {
-    val map = unalignedPices.map(canInsertPiece)
-    ! map.reduceLeft(_ &&_)
+    if (unalignedPices.isEmpty)
+      false
+    else {
+      val map = unalignedPices.map(canInsertPiece)
+      ! map.reduceLeft(_ &&_)
+    }
   }
 
   def doesHaveDeadSpot = {
@@ -77,31 +81,32 @@ extends ArrayPrinter
           }
         }.filter(_.isDefined).map(_.get)
 
+      val corners = getCorners(slicedArray)
       val boundaries = getBoundaries(slicedArray)
 
       // starting point in game desk is position
       // starting point in piece is equal to left upper corner
-      var startPoint = (boundaries._1._1, boundaries._2._1)
+      var startPoint = (corners._1._1, corners._1._2)
 
       // If you cannot go down, select leftmost lower corner
-      if (position.row + piece.height - 1 >= GameDesk.Rows) {
+      if (position.row + piece.height - 1 > GameDesk.Rows) {
         startPoint = (boundaries._1._2, startPoint._2)
       }
 
       // if you cannot go right, select rightmost coordinate
-      if (position.col + piece.width - 1 >= GameDesk.Cols) {
+      if (position.col + piece.width - 1 > GameDesk.Cols) {
         startPoint = (startPoint._1, boundaries._2._2)
       }
 
       val booleanArray = indeces.map( x => {
         val (row, col) = x
-        val arrayRow = position.row + row - startPoint._1
-        val arrayCol = position.col + col - startPoint._2
+        val arrayRow = position.row - (startPoint._1 - row)
+        val arrayCol = position.col - (startPoint._2 - col)
 
         if (arrayRow < 0 || arrayCol < 0 || arrayRow >= GameDesk.Rows || arrayCol >= GameDesk.Cols )
           false
         else
-          array(position.row + row - startPoint._1)(position.col + col - startPoint._2) == 0
+          array(arrayRow)(arrayCol) == 0
       })
 
       booleanArray.reduceLeft( _ && _)
@@ -130,11 +135,12 @@ extends ArrayPrinter
       }
     }.filter(_.isDefined).map(_.get)
 
+    val corners = getCorners(slicedArray)
     val boundaries = getBoundaries(slicedArray)
 
     // starting point in game desk is position
     // starting point in piece is equal to left upper corner
-    var startPoint = (boundaries._1._1, boundaries._2._1)
+    var startPoint = (corners._1._1, corners._1._2)
 
     // If you cannot go down, select leftmost lower corner
     if (position.row + piece.height - 1 >= GameDesk.Rows) {
@@ -146,18 +152,20 @@ extends ArrayPrinter
       startPoint = (startPoint._1, boundaries._2._2)
     }
 
-    val booleanArray = indeces.map( x => {
+    val booleanArray = indeces.foreach( x => {
       val (row, col) = x
-      val arrayRow = position.row + row - startPoint._1
-      val arrayCol = position.col + col - startPoint._2
+      val arrayRow = position.row - (startPoint._1 - row)
+      val arrayCol = position.col - (startPoint._2 - col)
 
       if (arrayRow < 0 || arrayCol < 0 || arrayRow >= GameDesk.Rows || arrayCol >= GameDesk.Cols )
         false
       else
-        newDesk(position.row + row - startPoint._1)(position.col + col - startPoint._2) = slicedArray(row)(col)
+        newDesk(arrayRow)(arrayCol) = slicedArray(row)(col)
     })
 
     val pieceToRemove = unalignedPices.find(_.pieceType == piece.pieceType).get
+
+    piece.position = Some(position)
 
     new GameDesk(newDesk, pieces + piece, unalignedPices - pieceToRemove)
   }
@@ -198,7 +206,7 @@ extends ArrayPrinter
 
     emptyCoordinates sortWith((x, y) => {
       if (x.row == y.row)
-        x.col <= y.col
+        x.col < y.col
       else
         x.row < y.row
     })
